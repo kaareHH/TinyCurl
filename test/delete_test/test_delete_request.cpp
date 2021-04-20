@@ -1,7 +1,6 @@
-#include <string>
-#include <fake_socket.h>
-#include <http_request.h>
 #include "unity.h"
+#include <socket/fake_socket.h>
+#include <http_request.h>
 
 fake_socket *sock;
 tinyclient::http_request client(nullptr);
@@ -9,9 +8,18 @@ tinyclient::http_request client(nullptr);
 void setUp(){
     sock = new fake_socket;
     client = tinyclient::http_request(sock);
+
 }
 void tearDown(){
     delete sock;
+}
+
+void test_check_type(){
+    response rsp = client.del("tinyclient.com");
+
+    const char* content = sock->content.toCharArray();
+    TEST_ASSERT_EQUAL_STRING_LEN("DELETE", content, 6);
+
 }
 
 void test_receives_input(){
@@ -22,17 +30,25 @@ void test_receives_input(){
 }
 
 
-void get_returns_a_response(){
-    TinyString url = "tinyclient.com";
-
-    response response = client.get(url);
+void runTests(){
+    RUN_TEST(test_check_type);
+    RUN_TEST(test_receives_input);
 }
-
 
 int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_receives_input);
-    RUN_TEST(get_returns_a_response);
-
+    runTests();
     return UNITY_END();
+}
+
+void setup()
+{
+    UNITY_BEGIN();
+    runTests();
+    UNITY_END();
+}
+
+void loop()
+{
+    
 }

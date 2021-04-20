@@ -1,5 +1,5 @@
 #include "unity.h"
-#include <fake_socket.h>
+#include <socket/fake_socket.h>
 #include <http_request.h>
 
 fake_socket *sock;
@@ -36,16 +36,33 @@ void test_socket_receives_body_in_the_end_of_request(){
     response rsp = client.post("tinyclient.com", body);
 
     auto content = sock->content;
-    TinyString res = body.dump();
+    TinyString res = body;
 
     TEST_ASSERT(content.ends_with(res));
 }
 
-
-int main(void) {
-    UNITY_BEGIN();
+void runTests(){
+    
     RUN_TEST(test_receives_input);
     RUN_TEST(test_accept_body_with_post_request);
     RUN_TEST(test_socket_receives_body_in_the_end_of_request);
+   
+}
+
+int main(void) {
+    UNITY_BEGIN();
+    runTests();
     return UNITY_END();
+}
+
+void setup()
+{
+    UNITY_BEGIN();
+    runTests();
+    UNITY_END();
+}
+
+void loop()
+{
+    
 }

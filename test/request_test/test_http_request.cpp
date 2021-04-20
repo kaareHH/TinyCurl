@@ -1,6 +1,6 @@
 #include "unity.h"
-#include "t_socket.h"
-#include <fake_socket.h>
+#include "socket/t_socket.h"
+#include <socket/fake_socket.h>
 #include "http_request.h"
 #include "macro/macro_defs.h"
 
@@ -49,11 +49,10 @@ void if_no_uri_make_it_empty(){
 void make_a_request_with_uri_and_host(){
     client.get("tinyclient.com/users?page=lol");
 
-    auto full_request = client.type() + " /users?page=lol HTTP/1.1\r\n"
-                                        "Host: tinyclient.com\r\n";
-
-
-    TEST_ASSERT(sock->content == full_request);
+    TinyString full_request ="GET /users?page=lol HTTP/1.1\r\nHost: tinyclient.com\r\n";
+    // Expected 'GET /users?page=lol HTTP/1.1\r\nHost: tinyclient.com\r\n'
+    // Was      'GET /users?page=lo HTTP/1.1\r\nHost: tinyclient.com\r\n' 
+    TEST_ASSERT_EQUAL_STRING(full_request.toCharArray(), sock->content.toCharArray());
 }
 
 void request_standard_accept_is_application_slash_json(){
@@ -62,14 +61,29 @@ void request_standard_accept_is_application_slash_json(){
     TEST_ASSERT(client.accept == constants::JSON);
 }
 
-// not needed when using generate_test_runner.rb
-int main(void) {
-    UNITY_BEGIN();
+void runTests(){
     RUN_TEST(test_request_string_have_method);
     RUN_TEST(find_address_only_have_baseurl);
     RUN_TEST(find_host_address_with_url_and_uri);
     RUN_TEST(if_no_uri_make_it_empty);
     RUN_TEST(make_a_request_with_uri_and_host);
     RUN_TEST(request_standard_accept_is_application_slash_json);
+}
+
+int main(void) {
+    UNITY_BEGIN();
+    runTests();
     return UNITY_END();
+}
+
+void setup()
+{
+    UNITY_BEGIN();
+    runTests();
+    UNITY_END();
+}
+
+void loop()
+{
+    
 }

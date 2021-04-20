@@ -1,7 +1,7 @@
 #ifndef TINY_CLIENT_HTTP_CLIENT_H
 #define TINY_CLIENT_HTTP_CLIENT_H
 
-#include "fake_socket.h"
+#include "socket/fake_socket.h"
 #include "bourne/json.hpp"
 #include "constants.h"
 #include <response/response.h>
@@ -77,7 +77,7 @@ private:
         return ss;
     }
 
-    TinyString find_host_address(const NativeString &url) {
+    TinyString find_host_address(const TinyString &url) {
         TinyString l_host_address = url.substr(0, url.find("/"));
 
         return l_host_address;
@@ -86,7 +86,7 @@ private:
     TinyString find_uri(const TinyString &url) {
         TinyString l_uri = "";
         if (url.find("/") != -1)
-            l_uri = url.substr(url.find("/"), url.length() - 1);
+            l_uri = url.substr(url.find("/"), url.length());
 
         return l_uri;
     }

@@ -2,19 +2,21 @@
 #define TINY_CLIENT_T_SOCKET_H
 #include <unistd.h>
 #include "macro/macro_defs.h"
+#include "response/response.h"
 
 namespace tinyclient{
     class t_socket {
     public:
-        virtual TinyString send(TinyString url){
-
-            return "hej";
-        };
-        virtual void recv(){};
+        virtual void send(TinyString url){ };
+        virtual TinyString recv(){ return "STUB"; };
         virtual TinyString response(){return "base response";};
 
         TinyString content = "";
+
+        virtual ~t_socket() { };
+
     };
+
 
 }
 
